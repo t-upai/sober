@@ -24,12 +24,41 @@ if (navToggle && navMenu) {
 }
 
 // Simulasi submit form
-const contactForm = document.querySelector(".contact-form");
-if (contactForm) {
-  contactForm.addEventListener("submit", (e) => {
+// Submit form ke WhatsApp
+const orderForm = document.getElementById("orderForm");
+if (orderForm) {
+  orderForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    alert("Terima kasih, pesanan Anda sudah diterima! Kami akan menghubungi segera.");
-    contactForm.reset();
+
+    const nama = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const orderText = document.getElementById("order").value.trim();
+
+    if (!nama || !phone) {
+      alert("Mohon lengkapi Nama dan No. HP / WhatsApp.");
+      return;
+    }
+
+    // Susun pesan
+    let pesan = `Halo Kopi Sober,%0A%0A`;
+    pesan += `Nama: ${nama}%0A`;
+    pesan += `No. HP: ${phone}%0A`;
+    pesan += `Pesanan: ${orderText || "-"}%0A%0A`;
+    pesan += `Dikirim dari website Kopi Sober.`;
+
+    // Nomor WhatsApp tujuan (format internasional tanpa + dan tanpa 0 depan)
+    const tujuan = "6285837564072";
+
+    const waUrl = `https://wa.me/${tujuan}?text=${pesan}`;
+
+    // Notifikasi dulu
+    alert("Terima kasih, Anda akan diarahkan ke WhatsApp untuk konfirmasi pesanan.");
+
+    // Buka WhatsApp di tab baru
+    window.open(waUrl, "_blank");
+
+    // Reset form
+    orderForm.reset();
   });
 }
 
@@ -44,7 +73,7 @@ navLinks.forEach(link => {
     const targetEl = document.querySelector(targetId);
     if (!targetEl) return;
 
-    const headerHeight = header.offsetHeight;
+    const headerHeight = header ? header.offsetHeight : 0;
     const targetPosition = targetEl.offsetTop - headerHeight;
 
     window.scrollTo({
@@ -53,3 +82,99 @@ navLinks.forEach(link => {
     });
   });
 });
+
+/* ==========================
+   MODAL DETAIL MENU (FULLSCREEN)
+   ========================== */
+
+const menuModal = document.getElementById("menuModal");
+const closeMenuModal = document.getElementById("closeMenuModal");
+const closeMenuModal2 = document.getElementById("closeMenuModal2");
+
+const modalImg = document.getElementById("modalImg");
+const modalTitle = document.getElementById("modalTitle");
+const modalPrice = document.getElementById("modalPrice");
+const modalDesc = document.getElementById("modalDesc");
+const modalList = document.getElementById("modalList");
+
+const paymentCard = document.getElementById("paymentCard");
+const togglePaymentBtn = document.getElementById("togglePayment");
+
+const menuCards = document.querySelectorAll(".menu-open");
+let activeCard = null;
+
+function openMenuModalFromCard(card) {
+  if (!menuModal) return;
+
+  const title = card.dataset.title || "";
+  const price = card.dataset.price || "";
+  const desc = card.dataset.desc || "";
+  const imgClass = card.dataset.img || "";
+  const items = (card.dataset.items || "").split("|").map(s => s.trim()).filter(Boolean);
+
+  if (modalTitle) modalTitle.textContent = title;
+  if (modalPrice) modalPrice.textContent = price;
+  if (modalDesc) modalDesc.textContent = desc;
+
+  if (modalImg) modalImg.className = "menu-modal-img " + imgClass;
+
+  if (modalList) {
+    modalList.innerHTML = "";
+    items.forEach((t) => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      modalList.appendChild(li);
+    });
+  }
+
+  // reset payment card setiap buka modal
+  if (paymentCard) paymentCard.classList.remove("show");
+  if (togglePaymentBtn) togglePaymentBtn.textContent = "Pesan Sekarang";
+
+  // tandai kartu yang aktif
+  if (activeCard) activeCard.classList.remove("menu-active");
+  activeCard = card;
+  activeCard.classList.add("menu-active");
+
+  menuModal.showModal();
+}
+
+menuCards.forEach((card) => {
+  card.addEventListener("click", () => openMenuModalFromCard(card));
+});
+
+// Toggle card pembayaran
+if (togglePaymentBtn && paymentCard){
+  togglePaymentBtn.addEventListener("click", () => {
+    const isShown = paymentCard.classList.toggle("show");
+    togglePaymentBtn.textContent = isShown ? "Sembunyikan Pembayaran" : "Pesan Sekarang";
+  });
+}
+
+function closeMenuModalFn() {
+  if (menuModal && menuModal.open) {
+    menuModal.close();
+  }
+  if (activeCard) {
+    activeCard.classList.remove("menu-active");
+    activeCard = null;
+  }
+  if (paymentCard) {
+    paymentCard.classList.remove("show");
+  }
+  if (togglePaymentBtn) {
+    togglePaymentBtn.textContent = "Pesan Sekarang";
+  }
+}
+
+if (closeMenuModal) closeMenuModal.addEventListener("click", closeMenuModalFn);
+if (closeMenuModal2) closeMenuModal2.addEventListener("click", closeMenuModalFn);
+
+// Klik area kosong di dalam dialog (backdrop internal) untuk tutup
+if (menuModal) {
+  menuModal.addEventListener("mousedown", (event) => {
+    if (event.target === event.currentTarget) {
+      closeMenuModalFn();
+    }
+  });
+}
