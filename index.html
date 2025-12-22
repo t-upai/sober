@@ -19,8 +19,8 @@
   <header class="header">
     <nav class="nav container">
       <a href="#home" class="logo">
-      <img src="assets/img/logop.png" alt="Kopi Sober" class="logo-img" />
-</a>
+        <img src="assets/img/logop.png" alt="Kopi Sober" class="logo-img" />
+      </a>
 
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span class="bar"></span>
@@ -38,7 +38,7 @@
     </nav>
   </header>
 
-  <!-- KONTEN (BISA DIBLUR VIA CSS PSEUDO ELEMENT) -->
+  <!-- KONTEN -->
   <div class="bg-wrapper">
     <main>
       <!-- HERO -->
@@ -83,7 +83,7 @@
         </div>
       </section>
 
-      <!-- MENU -->
+      <!-- MENU (KLIK UNTUK MODAL) -->
       <section class="section" id="menu">
         <div class="container">
           <div class="section-header">
@@ -92,7 +92,14 @@
           </div>
 
           <div class="menu-grid">
-            <article class="menu-card">
+            <!-- ITEM 1 -->
+            <article class="menu-card menu-open"
+              data-title="Kopi Susu Sober"
+              data-price="Rp10.000"
+              data-desc="Signature kopi susu creamy dengan rasa balance, favorit #SoberPeople."
+              data-img="menu-img-1"
+              data-items="Profil rasa: creamy, balance.|Cocok untuk: kerja, perjalanan, ngopi santai.|Saran: less sugar untuk yang tidak terlalu manis.">
+
               <div class="menu-img menu-img-1"></div>
               <div class="menu-body">
                 <h3>Kopi Susu Sober</h3>
@@ -104,7 +111,14 @@
               </div>
             </article>
 
-            <article class="menu-card">
+            <!-- ITEM 2 -->
+            <article class="menu-card menu-open"
+              data-title="Kopi Susu Gula Aren"
+              data-price="Rp12.000"
+              data-desc="Kopi susu dengan gula aren premium, manisnya pas dan bikin nagih."
+              data-img="menu-img-2"
+              data-items="Profil rasa: manis aren, aroma kopi tetap terasa.|Cocok untuk: teman lembur dan malam hari.|Saran: normal sugar biar aren-nya keluar.">
+
               <div class="menu-img menu-img-2"></div>
               <div class="menu-body">
                 <h3>Kopi Susu Gula Aren</h3>
@@ -116,7 +130,14 @@
               </div>
             </article>
 
-            <article class="menu-card">
+            <!-- ITEM 3 -->
+            <article class="menu-card menu-open"
+              data-title="Matcha Latte"
+              data-price="Rp15.000"
+              data-desc="Perpaduan matcha dan susu untuk kamu yang suka manis."
+              data-img="menu-img-3"
+              data-items="Profil rasa: milky, matcha lembut.|Cocok untuk: yang tidak ingin kopi.|Saran: tambah es biar lebih segar.">
+
               <div class="menu-img menu-img-3"></div>
               <div class="menu-body">
                 <h3>Matcha Latte</h3>
@@ -197,19 +218,19 @@
             </div>
           </div>
 
-          <form class="contact-form">
+          <form class="contact-form" id="orderForm">
             <h3>Form Pre-Order Kopi</h3>
-
+                    
             <div class="form-group">
               <label for="name">Nama</label>
               <input type="text" id="name" placeholder="Nama lengkap" required />
             </div>
-
+          
             <div class="form-group">
               <label for="phone">No. HP / WhatsApp</label>
               <input type="tel" id="phone" placeholder="08xxxxxxxxxx" required />
             </div>
-
+          
             <div class="form-group">
               <label for="order">Detail Pesanan</label>
               <textarea
@@ -218,9 +239,9 @@
                 placeholder="Contoh: 10 cup Kopi Susu Sober untuk jam 11.00"
               ></textarea>
             </div>
-
+          
             <button type="submit" class="btn btn-full">Kirim Pesanan</button>
-
+          
             <p class="form-note">
               Admin Sober akan membalas maksimal 5 menit setelah form dikirim "Insya Allah".
             </p>
@@ -237,6 +258,61 @@
       </div>
     </footer>
   </div>
+
+  <!-- MODAL DETAIL MENU (FULLSCREEN OVERLAY) -->
+  <dialog class="menu-modal" id="menuModal">
+    <div class="menu-modal-card">
+      <button class="menu-modal-close" id="closeMenuModal" aria-label="Tutup">×</button>
+
+      <div class="menu-modal-head">
+        <div class="menu-modal-img" id="modalImg"></div>
+
+        <div class="menu-modal-title">
+          <h3 id="modalTitle">Judul</h3>
+          <p id="modalPrice" class="price">Rp0</p>
+          <p id="modalDesc" class="menu-modal-desc">Deskripsi...</p>
+        </div>
+      </div>
+
+      <div class="menu-modal-body">
+        <p class="menu-more-title">Detail menu</p>
+        <ul id="modalList" class="menu-more-list"></ul>
+
+        <div class="menu-modal-actions">
+          <button type="button" class="btn" id="togglePayment">
+            Pesan Sekarang
+          </button>
+          <button type="button" class="btn btn-outline" id="closeMenuModal2">Tutup</button>
+        </div>
+
+        <!-- CARD PEMBAYARAN / QRIS -->
+        <div class="payment-card" id="paymentCard">
+          <h4>Metode Pembayaran</h4>
+          <p class="payment-subtitle">Scan QRIS atau transfer ke rekening berikut.</p>
+
+          <div class="payment-grid">
+            <div class="payment-qris">
+              <div class="qris-box">
+                <!-- Ganti src dengan file QRIS Anda -->
+                <img src="assets/img/qris.jpeg" alt="QRIS Kopi Sober" />
+              </div>
+              <p class="payment-note">
+                Setelah pembayaran, kirim bukti transfer ke admin WhatsApp.
+              </p>
+            </div>
+
+            <div class="payment-info">
+              <ul>
+                <li><strong>Nama:</strong> Kopi Sober</li>
+                <li><strong>Bank:</strong> BCA</li>
+                <li><strong>No. Rek:</strong> 1234567890</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
   <script src="assets/script.js"></script>
 </body>
